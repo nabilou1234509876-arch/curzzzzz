@@ -123,11 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             dActivity.innerHTML = `<span class="activity-bold">Playing</span> A proffissional coder`;
         }
     }
-        } else {
-            dActivity.innerHTML = `<span class="activity-bold">Playing</span> A professional coder`;
-        }
-    }
-
 
     // ---- Entry & Audio Logic ----
     let hasStarted = false;
