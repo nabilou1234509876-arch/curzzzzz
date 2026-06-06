@@ -38,6 +38,26 @@ document.addEventListener('DOMContentLoaded', () => {
             viewCountEl.innerText = "150"; // Fallback if API fails
         });
 
+    // ---- Discord Profile Fallback (Public API) ----
+    // This fetches your actual PFP and Banner even if Lanyard is offline
+    fetch('https://dcdn.dstn.to/profile/1153392848490737684')
+        .then(res => res.json())
+        .then(data => {
+            if (data.user) {
+                // Set PFP
+                const avatarExt = data.user.avatar.startsWith('a_') ? 'gif' : 'png';
+                dPfp.src = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.${avatarExt}?size=256`;
+                
+                // Set Banner
+                if (data.user.banner) {
+                    const bannerExt = data.user.banner.startsWith('a_') ? 'gif' : 'png';
+                    const dBanner = document.getElementById('discord-banner');
+                    dBanner.style.backgroundImage = `url(https://cdn.discordapp.com/banners/${data.user.id}/${data.user.banner}.${bannerExt}?size=512)`;
+                }
+            }
+        })
+        .catch(err => console.log("Fallback profile fetch failed", err));
+
     // ---- Lanyard (Live Discord Presence) ----
     const LANYARD_USER_ID = "1153392848490737684";
     const ws = new WebSocket('wss://api.lanyard.rest/socket');
@@ -73,6 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const ext = data.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
         dPfp.src = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.${ext}?size=256`;
 
+        // Update Banner if available via Lanyard (sometimes provided)
+        const dBanner = document.getElementById('discord-banner');
+        if (data.discord_user.banner) {
+            const bannerExt = data.discord_user.banner.startsWith('a_') ? 'gif' : 'png';
+            dBanner.style.backgroundImage = `url(https://cdn.discordapp.com/banners/${data.discord_user.id}/${data.discord_user.banner}.${bannerExt}?size=512)`;
+        }
+
         // Update Status Dot Color
         dStatus.className = `status-dot ${data.discord_status}`;
 
@@ -90,8 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (customStatus) {
                 dActivity.innerHTML = `${customStatus.emoji ? customStatus.emoji.name + ' ' : ''}${customStatus.state || ''}`;
             } else {
-                dActivity.innerHTML = `<span class="activity-bold">Playing</span> A professional coder`;
+                dActivity.innerHTML = `<span class="activity-bold">Playing</span> A proffissional coder`;
             }
+        } else {
+            dActivity.innerHTML = `<span class="activity-bold">Playing</span> A proffissional coder`;
+        }
+    }
         } else {
             dActivity.innerHTML = `<span class="activity-bold">Playing</span> A professional coder`;
         }
