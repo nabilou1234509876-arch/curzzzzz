@@ -2,51 +2,47 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-    background-color: #000;
+    background-color: #050505;
     color: #fff;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
+    width: 100vw;
+    cursor: crosshair; 
 }
 
+/* Initial Overlay */
 #click-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background-color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+    z-index: 50;
     cursor: pointer;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.5s;
 }
 
 #click-overlay h2 {
     animation: pulse 2s infinite;
     letter-spacing: 2px;
+    font-weight: 400;
+    color: #fff;
 }
 
 @keyframes pulse {
-    0% { opacity: 0.5; }
+    0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
-    100% { opacity: 0.5; }
 }
 
+/* Background Video & CRT Scanlines */
 .video-container {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     z-index: -1;
     transition: opacity 1s ease;
 }
@@ -55,12 +51,29 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    filter: brightness(0.5) grayscale(0.5); /* slightly dimmed and desaturated to match vibe */
 }
 
+.scanlines {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Main Layout */
 #main-content {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
-    z-index: 1;
+    transition: opacity 1.5s ease-in-out;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 #main-content.visible {
@@ -69,77 +82,238 @@ body {
 
 .hidden {
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none !important;
 }
 
-.profile-card {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 15px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 300px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-}
-
-h1 {
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(255,255,255,0.3);
-}
-
-.links {
+.center-content {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    align-items: center;
+    gap: 30px;
+    z-index: 10;
 }
 
-.link-btn {
-    text-decoration: none;
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-weight: 500;
-    letter-spacing: 1px;
+/* Main Name */
+.main-name {
+    font-size: 4rem;
+    font-weight: 800;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
 }
 
-.link-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+/* Discord Card */
+.discord-card {
+    background: rgba(20, 20, 20, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 450px;
+    max-width: 90vw;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
-.audio-controls {
+.pfp-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    flex-shrink: 0;
+}
+
+.discord-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.status-dot {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    background: #18191c;
+    border-radius: 50%;
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 12px;
-    border-radius: 10px;
+}
+
+.status-dot img {
+    width: 18px;
+    height: 18px;
+}
+
+.discord-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.discord-name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.discord-username {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.discord-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,0,0,0.4);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.badge-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.discord-activity {
+    font-size: 1rem;
+    color: #ccc;
+    font-weight: 400;
+}
+
+.activity-bold {
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Bottom Socials */
+.bottom-socials {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.social-icon-link {
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+}
+
+.social-icon-link:hover {
+    transform: translateY(-5px) scale(1.1);
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.9));
+}
+
+.social-icon-link img {
+    width: 50px;
+    height: 50px;
+}
+
+/* Views Counter */
+.views-counter {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    z-index: 20;
+}
+
+.views-counter img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Audio Controls */
+.audio-controls {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 20;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.audio-controls:hover {
+    opacity: 1;
 }
 
 #mute-btn {
     background: none;
     border: none;
-    color: white;
-    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#volume-slider {
+    width: 100px;
+    height: 4px;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
     cursor: pointer;
     transition: transform 0.2s;
 }
 
-#mute-btn:hover {
-    transform: scale(1.1);
+#volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
 }
 
-#volume-slider {
-    width: 120px;
-    cursor: pointer;
-    accent-color: #fff;
+/* Snowflakes */
+.snow-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
+
+.snow {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2em;
+    font-family: Arial;
+    text-shadow: 0 0 5px rgba(255,255,255,0.8);
+    position: absolute;
+    top: -10vh;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(360deg); }
+}
+
+.snow:nth-child(1) { left: 10%; animation-duration: 10s; }
+.snow:nth-child(2) { left: 30%; animation-duration: 12s; animation-delay: 2s; }
+.snow:nth-child(3) { left: 50%; animation-duration: 15s; animation-delay: 4s; }
+.snow:nth-child(4) { left: 70%; animation-duration: 11s; animation-delay: 1s; }
+.snow:nth-child(5) { left: 90%; animation-duration: 14s; animation-delay: 3s; }
+.snow:nth-child(6) { left: 20%; animation-duration: 13s; animation-delay: 5s; }
+.snow:nth-child(7) { left: 80%; animation-duration: 16s; animation-delay: 0.5s; }
+.snow:nth-child(8) { left: 40%; animation-duration: 12s; animation-delay: 3.5s; }
+.snow:nth-child(9) { left: 60%; animation-duration: 10s; animation-delay: 1.5s; }
