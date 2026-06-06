@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const volumeSlider = document.getElementById('volume-slider');
     const volumeIcon = document.getElementById('volume-icon');
     const cursorGlow = document.getElementById('cursor-glow');
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorRing = document.getElementById('cursor-ring');
     const viewCountEl = document.getElementById('view-count');
 
     // Discord Elements
@@ -15,16 +17,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const dStatus = document.getElementById('discord-status');
     const dUsername = document.getElementById('discord-username');
 
-    // ---- Custom Cursor Glow ----
+    // ---- Custom Mouse Cursor & Glow ----
     document.addEventListener('mousemove', (e) => {
-        // Move glow effect smoothly to cursor position
+        // Instant follow for glow and dot
         cursorGlow.style.left = e.clientX + 'px';
         cursorGlow.style.top = e.clientY + 'px';
+        cursorDot.style.left = e.clientX + 'px';
+        cursorDot.style.top = e.clientY + 'px';
+        // Smooth trailing follow for ring (CSS handled via transition)
+        cursorRing.style.left = e.clientX + 'px';
+        cursorRing.style.top = e.clientY + 'px';
     });
     
     // Add click effect for cursor
-    document.addEventListener('mousedown', () => cursorGlow.style.transform = 'translate(-50%, -50%) scale(0.8)');
-    document.addEventListener('mouseup', () => cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)');
+    document.addEventListener('mousedown', () => {
+        cursorGlow.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        cursorRing.style.transform = 'translate(-50%, -50%) scale(0.6)';
+        cursorRing.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+    });
+    document.addEventListener('mouseup', () => {
+        cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+        cursorRing.style.backgroundColor = 'transparent';
+    });
 
     // ---- Live View Counter (Free public API) ----
     // This increments the count by 1 every time the page loads
