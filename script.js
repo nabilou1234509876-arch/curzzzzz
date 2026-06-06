@@ -39,20 +39,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // ---- Discord Profile Fallback (Public API) ----
-    // This fetches your actual PFP and Banner even if Lanyard is offline
-    fetch('https://dcdn.dstn.to/profile/1153392848490737684')
+    // This fetches your actual PFP and Banner (using japi.rest)
+    fetch('https://japi.rest/discord/v1/user/1153392848490737684')
         .then(res => res.json())
-        .then(data => {
-            if (data.user) {
-                // Set PFP
-                const avatarExt = data.user.avatar.startsWith('a_') ? 'gif' : 'png';
-                dPfp.src = `https://cdn.discordapp.com/avatars/${data.user.id}/${data.user.avatar}.${avatarExt}?size=256`;
+        .then(resData => {
+            const data = resData.data;
+            if (data) {
+                // Set PFP (Auto-detects GIF or PNG)
+                if (data.avatarURL) {
+                    // Check if it's animated by looking at the avatar hash
+                    const isGif = data.avatar && data.avatar.startsWith('a_');
+                    const sizeParam = '?size=512';
+                    const avatarUrl = isGif ? data.avatarURL.replace('.png', '.gif') + sizeParam : data.avatarURL + sizeParam;
+                    dPfp.src = avatarUrl;
+                }
                 
                 // Set Banner
-                if (data.user.banner) {
-                    const bannerExt = data.user.banner.startsWith('a_') ? 'gif' : 'png';
+                if (data.bannerURL) {
                     const dBanner = document.getElementById('discord-banner');
-                    dBanner.style.backgroundImage = `url(https://cdn.discordapp.com/banners/${data.user.id}/${data.user.banner}.${bannerExt}?size=512)`;
+                    dBanner.style.backgroundImage = `url(${data.bannerURL}?size=1024)`;
+                }
+
+                // Update Username to match global name
+                if (data.global_name) {
+                    dUsername.innerText = data.global_name.toLowerCase();
+                } else if (data.username) {
+                    dUsername.innerText = data.username.toLowerCase();
                 }
             }
         })
