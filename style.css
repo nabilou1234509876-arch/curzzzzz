@@ -28,10 +28,11 @@ body {
     background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 60%);
     border-radius: 50%;
     pointer-events: none;
-    transform: translate(-50%, -50%);
     z-index: 9997;
-    transition: width 0.3s ease, height 0.3s ease;
+    margin: -200px 0 0 -200px;
+    transition: transform 0.1s ease-out;
     mix-blend-mode: screen;
+    will-change: transform;
 }
 
 .cursor-dot {
@@ -43,9 +44,10 @@ body {
     background-color: #fff;
     border-radius: 50%;
     pointer-events: none;
-    transform: translate(-50%, -50%);
     z-index: 10000;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    margin: -3px 0 0 -3px; /* Center perfectly on coordinate */
+    will-change: transform;
 }
 
 .cursor-ring {
@@ -57,10 +59,11 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 50%;
     pointer-events: none;
-    transform: translate(-50%, -50%);
     z-index: 9999;
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    transition: width 0.2s, height 0.2s, top 0.15s ease-out, left 0.15s ease-out, background-color 0.2s, transform 0.2s;
+    margin: -16px 0 0 -16px; /* Center perfectly on coordinate */
+    transition: transform 0.1s ease-out, background-color 0.2s;
+    will-change: transform;
 }
 
 /* Initial Overlay */
@@ -332,8 +335,8 @@ body {
 /* Bottom Socials */
 .bottom-socials {
     display: flex;
-    gap: 45px;
-    margin-top: 15px;
+    gap: 35px;
+    margin-top: 10px;
 }
 
 .social-icon-link {
@@ -348,8 +351,58 @@ body {
 }
 
 .social-icon-link img {
-    width: 55px;
-    height: 55px;
+    width: 35px;
+    height: 35px;
+}
+
+/* Video Progress */
+.video-progress-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(15, 15, 15, 0.3);
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 12px 20px;
+    border-radius: 16px;
+    width: 480px;
+    max-width: 90vw;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.video-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.progress-bar-bg {
+    flex-grow: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    transition: width 0.1s linear;
+}
+
+.video-time {
+    font-size: 0.8rem;
+    color: #ccc;
+    font-variant-numeric: tabular-nums;
+    min-width: 75px;
+    text-align: right;
 }
 
 /* Live Views Counter */

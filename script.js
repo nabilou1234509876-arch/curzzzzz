@@ -17,28 +17,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const dStatus = document.getElementById('discord-status');
     const dUsername = document.getElementById('discord-username');
 
-    // ---- Custom Mouse Cursor & Glow ----
+    // ---- Custom Mouse Cursor & Glow (Butter Smooth Animation) ----
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let isClicked = false;
+
     document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        
         // Instant follow for glow and dot
-        cursorGlow.style.left = e.clientX + 'px';
-        cursorGlow.style.top = e.clientY + 'px';
-        cursorDot.style.left = e.clientX + 'px';
-        cursorDot.style.top = e.clientY + 'px';
-        // Smooth trailing follow for ring (CSS handled via transition)
-        cursorRing.style.left = e.clientX + 'px';
-        cursorRing.style.top = e.clientY + 'px';
+        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
     });
+
+    function animateRing() {
+        // Smooth trailing formula
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        
+        let scale = isClicked ? 0.6 : 1;
+        let glowScale = isClicked ? 0.8 : 1;
+        
+        cursorRing.style.transform = `translate(${ringX}px, ${ringY}px) scale(${scale})`;
+        cursorGlow.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(${glowScale})`;
+        
+        requestAnimationFrame(animateRing);
+    }
+    requestAnimationFrame(animateRing);
     
     // Add click effect for cursor
     document.addEventListener('mousedown', () => {
-        cursorGlow.style.transform = 'translate(-50%, -50%) scale(0.8)';
-        cursorRing.style.transform = 'translate(-50%, -50%) scale(0.6)';
+        isClicked = true;
         cursorRing.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
     });
     document.addEventListener('mouseup', () => {
-        cursorGlow.style.transform = 'translate(-50%, -50%) scale(1)';
-        cursorRing.style.transform = 'translate(-50%, -50%) scale(1)';
+        isClicked = false;
         cursorRing.style.backgroundColor = 'transparent';
+    });
+
+    // ---- Video Progress Bar Logic ----
+    const videoProgress = document.getElementById('video-progress');
+    const videoTime = document.getElementById('video-time');
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    video.addEventListener('timeupdate', () => {
+        if (video.duration) {
+            const percent = (video.currentTime / video.duration) * 100;
+            videoProgress.style.width = `${percent}%`;
+            videoTime.innerText = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+        }
     });
 
     // ---- Live View Counter (Free public API) ----
