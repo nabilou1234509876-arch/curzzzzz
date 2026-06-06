@@ -261,15 +261,38 @@ body {
     height: 16px;
 }
 
-.discord-activity {
-    font-size: 1.05rem;
-    color: #b9bbbe;
-    font-weight: 400;
+.custom-status-bubble {
+    position: absolute;
+    top: -5px;
+    left: 115px;
+    background: #111214;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    z-index: 10;
+    white-space: nowrap;
 }
 
-.activity-bold {
-    font-weight: 700;
-    color: #fff;
+.custom-status-bubble::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -5px;
+    width: 10px;
+    height: 10px;
+    background: #111214;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.status-text {
+    font-size: 0.95rem;
+    color: #dbdee1;
+    font-weight: 500;
 }
 
 /* Bottom Socials */

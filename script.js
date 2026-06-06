@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dPfp = document.getElementById('discord-pfp');
     const dStatus = document.getElementById('discord-status');
     const dUsername = document.getElementById('discord-username');
-    const dActivity = document.getElementById('discord-activity');
 
     // ---- Custom Cursor Glow ----
     document.addEventListener('mousemove', (e) => {
@@ -118,22 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update Username
         dUsername.innerText = data.discord_user.username;
 
-        // Update Activity
-        if (data.activities && data.activities.length > 0) {
-            // Find a game or custom status
-            const customStatus = data.activities.find(a => a.type === 4);
-            const game = data.activities.find(a => a.type === 0);
-
-            if (game) {
-                dActivity.innerHTML = `<span class="activity-bold">Playing</span> ${game.name}`;
-            } else if (customStatus) {
-                dActivity.innerHTML = `${customStatus.emoji ? customStatus.emoji.name + ' ' : ''}${customStatus.state || ''}`;
-            } else {
-                dActivity.innerHTML = `<span class="activity-bold">Playing</span> A proffissional coder`;
-            }
-        } else {
-            dActivity.innerHTML = `<span class="activity-bold">Playing</span> A proffissional coder`;
-        }
+        // Custom status bubble is handled via HTML statically
     }
 
     // ---- Entry & Audio Logic ----
